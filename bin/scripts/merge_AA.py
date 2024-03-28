@@ -47,10 +47,12 @@ for plasmid in plasmid_list:
                 for locus in locus_list:
                     start=data.find(locus)
                     end=data.find('>', start+1)
-                    
-                    print(data[start:end])
+                    result = data[start:end]
+                    result = result.replace(' ', '_')
+
+                    print(result)
                     with open(f'merged_AA/{gene_of_interest}.fasta', 'a') as out:
-                        out.write(f'>{plasmid}_{data[start:end]}')
+                        out.write(f'>{plasmid}_{result}')
                         out.close()
         else:
             pass
