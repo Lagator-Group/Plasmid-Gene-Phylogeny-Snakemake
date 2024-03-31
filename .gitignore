@@ -6,3 +6,6 @@ sprot_TF
 plasmid_summary.csv
 /prokka_gff
 /fasta_plasmid
+/iqtree
+/mobsuite
+/panaroo
