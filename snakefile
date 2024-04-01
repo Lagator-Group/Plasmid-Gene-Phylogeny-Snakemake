@@ -2,16 +2,28 @@ configfile: 'config.yml'
 
 rule all:
     input:
-        expand('merged_AA/{gene}.fasta',gene=config['genes'])
+        expand('iqtree/protein_{gene}/{gene}.tree',gene=config['genes']),
+        expand('mobsuite/{plasmid}.tsv',plasmid=config['plasmids']),
+        expand('panaroo/{gene}',gene=config['genes'])
 
-rule get_protein_faa:
+rule merge_AA_gff:
     input: 
         'plasmid_summary.csv',
+    output:
+        temp('merged_AA_temp/{gene}.fasta'),
+        directory('prokka_gff/{gene}')
+    threads: 2
+    script:
+        'bin/scripts/merge_AA_gff.py'
+
+rule remove_protein:
+    input:
+        'merged_AA_temp/{gene}.fasta'
     output:
         'merged_AA/{gene}.fasta'
     threads: 2
     script:
-        'bin/scripts/merge_AA.py'
+        'bin/scripts/remove_protein.py'
 
 rule muscle:
     input:
@@ -36,12 +48,35 @@ rule iqtree:
         'muscle/protein_{gene}.afa',
         'iqtree/protein_{gene}/{gene}.log'
     output:
-        'iqtree/protein_{gene}/{gene}.iqtree'
+        'iqtree/protein_{gene}/{gene}.tree'
     params:
-        prefix = 'iqtree/protein_{gene}/{gene}'
+        prefix = 'iqtree/protein_{gene}/{gene}',
+        treefile = 'iqtree/protein_{gene}/{gene}.treefile'
     threads: 8
     conda:
         'bin/env/iqtree.yml'
     shell:
-        'iqtree -s {input[0]} -st AA -nt {threads} --prefix {params.prefix}'
+        'iqtree -s {input[0]} -st AA -nt {threads} --prefix {params.prefix} &&'
+        'mv {params.treefile} {output}'
 
+rule mobtyper:
+    input:
+        'fasta_plasmid/{plasmid}.fasta'
+    output:
+        'mobsuite/{plasmid}.tsv'
+    threads: 4
+    conda:
+        'bin/env/mobsuite.yml'
+    shell:
+        'mob_typer --infile {input} --out_file {output}'
+
+rule panaroo:
+    input:
+        'prokka_gff/{gene}'
+    output:
+        directory('panaroo/{gene}')
+    threads: 8
+    conda:
+        'bin/env/panaroo.yml'
+    shell:
+        'panaroo -i {input}/*.gff -o {output} -t {threads} --clean-mode moderate'
