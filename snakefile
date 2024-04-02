@@ -4,7 +4,8 @@ rule all:
     input:
         expand('iqtree/protein_{gene}/{gene}.tree',gene=config['genes']),
         expand('mobsuite/{plasmid}.tsv',plasmid=config['plasmids']),
-        expand('panaroo/{gene}',gene=config['genes'])
+        expand('panaroo/{gene}',gene=config['genes']),
+        'plasmid_grouping/metadata.tsv'
 
 rule merge_AA_gff:
     input: 
@@ -80,3 +81,11 @@ rule panaroo:
         'bin/env/panaroo.yml'
     shell:
         'panaroo -i {input}/*.gff -o {output} -t {threads} --clean-mode moderate'
+
+rule metadata:
+    input:
+    output:
+        'plasmid_grouping/metadata.tsv'
+    threads: 2
+    script:
+        'bin/scripts/metadata.py'
