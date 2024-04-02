@@ -1,3 +1,7 @@
+# Remove protein identifiers from FASTA file and only keeps plasmid name
+# Input: FASTA file with protein sequence
+# Output: FASTA file with only the header lines (without protein sequence)
+
 # Read in fasta file
 file_in = snakemake.input[0]
 

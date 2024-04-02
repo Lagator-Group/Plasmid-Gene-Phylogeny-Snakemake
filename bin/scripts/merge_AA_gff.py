@@ -1,3 +1,9 @@
+# This script merges GFF files for plasmids that contain a gene of interest
+# from the plasmid_summary.csv file.
+# The GFF files are located in prokka/<plasmid>/<plasmid>.gff
+# The output is a FASTA file containing the protein sequences for the gene of interest
+# for each plasmid that contains it.
+
 import pandas as pd
 import os
 import shutil
