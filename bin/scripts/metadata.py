@@ -103,4 +103,4 @@ for plasmid in inc_group_df['Plasmid']:  # loop through each plasmid in the data
 plasmid_inc_out = f'{dir_out}/plasmid_inc.tsv'  # output file with plasmid incompatibility group information
 
 print(f'Writing incompatibility group dataframe to {plasmid_inc_out}')
-inc_group_df.to_csv(plasmid_inc_out,sep='\t', index=False)  # write the dataframe to the output file
+inc_group_df.to_csv(plasmid_inc_out,sep=',', index=False)  # write the dataframe to the output file
