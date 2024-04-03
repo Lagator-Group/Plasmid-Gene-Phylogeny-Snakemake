@@ -1,4 +1,4 @@
-threads: 8
+threads: 16
 
 genes: ['finO',repA2]
 
