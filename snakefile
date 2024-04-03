@@ -82,10 +82,21 @@ rule panaroo:
     shell:
         'panaroo -i {input}/*.gff -o {output} -t {threads} --clean-mode moderate'
 
+rule metadata_touch:
+    input:
+        expand('mobsuite/{plasmid}.tsv',plasmid=config['plasmids'])
+    output:
+        temp('temp/metadata_touch.txt')
+    threads: 1
+    shell:
+        'touch {output}'
+
 rule metadata:
     input:
+        'temp/metadata_touch.txt'
     output:
         'plasmid_grouping/metadata.tsv'
+        ''
     threads: 2
     script:
         'bin/scripts/metadata.py'
