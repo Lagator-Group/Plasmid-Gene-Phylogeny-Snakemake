@@ -1,5 +1,5 @@
 # Plasmid Transcription Factor Phylogeny
-This snakemake pipeline will generate the files necessary to build a phylogenetic tree for genes located on plasmids, and classify plasmids according to their incompatibility markers and pangenomes. Designed to be compatible with [Phandango](http://jameshadfield.github.io/phandango/#/main)
+This snakemake pipeline will generate the files necessary to build a phylogenetic tree for genes located on plasmids, and classify plasmids according to their incompatibility markers and pangenomes. Designed to be compatible with [Phandango](http://jameshadfield.github.io/phandango/#/main).
 Briefly, this pipeline:
 1. Merges amino acid (AA) sequences of gene of interest from all plasmids and output to a single file.
 2. Aligns AA sequences with [Muscle](https://github.com/rcedgar/muscle).
