@@ -14,7 +14,7 @@ Uses [Snakemake](https://github.com/snakemake/snakemake) pipeline for sequence a
 Most of the files required are outputs of [Plasmid Assembler and TF Annotation pipeline](https://github.com/Lagator-Group/Plasmid-Assembly-TF-Annotation-Snakemake). Specifically, these items are:
 - fasta_plasmid: Complete plasmid sequences in `.fasta` format.
 - prokka: Output of [Prokka](https://github.com/tseemann/prokka) when run on plasmid sequences.
-- plasmid_summary.csv: Output of [Plasmid Assembler and TF Annotation pipeline](https://github.com/Lagator-Group/Plasmid-Assembly-TF-Annotation-Snakemake) which summarises the findings.
+- sprot: Output of [Plasmid Assembler and TF Annotation pipeline](https://github.com/Lagator-Group/Plasmid-Assembly-TF-Annotation-Snakemake) which contains all Swissprot annotations.
 ### Config File
 Open `config.yml` and adjust the necessary parameters. 
 ### Running the pipeline

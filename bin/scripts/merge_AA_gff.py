@@ -8,33 +8,8 @@ import pandas as pd
 import os
 import shutil
 
-plasmid_df = pd.read_csv(snakemake.input[0])
 gene_of_interest = snakemake.wildcards.gene
-
-
 print(gene_of_interest)
-
-# For each row in the plasmid_df, retrieve the list of genes associated with that plasmid
-# and check if the gene of interest is in the list.
-# If it is, add the plasmid's name to the list of plasmids to process.
-plasmid_list = []
-
-n = 0  # index of row in plasmid_df
-for gene_list in plasmid_df['TF Gene Simplified']:
-    # Remove brackets and quotes from the gene list string
-    gene_list = gene_list.replace('[', '').replace(']', '').replace("'", '')
-    # Split the string into a list of gene names
-    gene_list = gene_list.split(', ')
-
-    if gene_of_interest in gene_list:
-        # If the gene of interest is in the list of genes for this plasmid,
-        # add the plasmid's name to the list of plasmids to process.
-        plasmid_list.append(plasmid_df['Plasmid'][n])
-    else:
-        pass  # Do nothing if the gene of interest is not in this plasmid's list
-
-    # Increment the index of the row in plasmid_df
-    n += 1
 
 # Create the output directories if they don't already exist
 try:
@@ -54,9 +29,10 @@ except:
 
 # For each plasmid in the list of plasmids to process,
 # retrieve the sprot_df for that plasmid and extract the gene names and locus tags
-for plasmid in plasmid_list:
+for tsv in os.listdir('sprot'):
+    plasmid = tsv.replace('.tsv', '')
     print(f"Processing plasmid {plasmid}")
-    sprot_df = pd.read_csv(f"sprot_TF/{plasmid}.tsv", sep="\t")
+    sprot_df = pd.read_csv(f"sprot/{plasmid}.tsv", sep="\t")
 
     # Extract the list of gene names and locus tags for this plasmid
     locus_list = []

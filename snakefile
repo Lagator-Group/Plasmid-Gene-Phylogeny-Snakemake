@@ -9,7 +9,7 @@ rule all:
 
 rule merge_AA_gff:
     input: 
-        'plasmid_summary.csv',
+        'sprot',
     output:
         temp('merged_AA_temp/{gene}.fasta'),
         directory('prokka_gff/{gene}')
