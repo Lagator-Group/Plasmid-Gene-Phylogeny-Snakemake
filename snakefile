@@ -64,7 +64,7 @@ rule mobtyper:
     input:
         'fasta_plasmid/{plasmid}.fasta'
     output:
-        'mobsuite/{plasmid}.tsv'
+        'mobsuite/{plasmid}.csv'
     threads: 4
     conda:
         'bin/env/mobsuite.yml'
