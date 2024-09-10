@@ -2,35 +2,35 @@ configfile: 'config.yml'
 
 rule all:
     input:
-        expand('iqtree/protein_{gene}/{gene}.tree',gene=config['genes']),
-        expand('mobsuite/{plasmid}.tsv',plasmid=config['plasmids']),
-        expand('panaroo/{gene}',gene=config['genes']),
-        'plasmid_grouping/metadata.tsv'
+        expand('data/iqtree/protein_{gene}/{gene}.tree',gene=config['genes']),
+        expand('data/mobsuite/{plasmid}.tsv',plasmid=config['plasmids']),
+        expand('data/panaroo/{gene}',gene=config['genes']),
+        'data/plasmid_grouping/metadata.tsv'
 
 rule merge_AA_gff:
     input: 
-        'sprot',
+        'data/sprot',
     output:
-        temp('merged_AA_temp/{gene}.fasta'),
-        directory('prokka_gff/{gene}')
+        temp('data/merged_AA_temp/{gene}.fasta'),
+        directory('data/prokka_gff/{gene}')
     threads: 2
     script:
         'bin/scripts/merge_AA_gff.py'
 
 rule remove_protein:
     input:
-        'merged_AA_temp/{gene}.fasta'
+        'data/merged_AA_temp/{gene}.fasta'
     output:
-        'merged_AA/{gene}.fasta'
+        'data/merged_AA/{gene}.fasta'
     threads: 2
     script:
         'bin/scripts/remove_protein.py'
 
 rule muscle:
     input:
-        'merged_AA/{gene}.fasta'
+        'data/merged_AA/{gene}.fasta'
     output:
-        'muscle/protein_{gene}.afa'
+        'data/muscle/protein_{gene}.afa'
     threads: 8
     conda:
         'bin/env/muscle.yml'
@@ -40,19 +40,19 @@ rule muscle:
 rule mkdir_iqtree:
     input:
     output:
-        'iqtree/protein_{gene}/{gene}.log'
+        'data/iqtree/protein_{gene}/{gene}.log'
     shell:
         'touch {output}'
     
 rule iqtree:
     input:
-        'muscle/protein_{gene}.afa',
-        'iqtree/protein_{gene}/{gene}.log'
+        'data/muscle/protein_{gene}.afa',
+        'data/iqtree/protein_{gene}/{gene}.log'
     output:
-        'iqtree/protein_{gene}/{gene}.tree'
+        'data/iqtree/protein_{gene}/{gene}.tree'
     params:
-        prefix = 'iqtree/protein_{gene}/{gene}',
-        treefile = 'iqtree/protein_{gene}/{gene}.treefile'
+        prefix = 'data/iqtree/protein_{gene}/{gene}',
+        treefile = 'data/iqtree/protein_{gene}/{gene}.treefile'
     threads: 8
     conda:
         'bin/env/iqtree.yml'
@@ -62,20 +62,20 @@ rule iqtree:
 
 rule mobtyper:
     input:
-        'fasta_plasmid/{plasmid}.fasta'
+        'data/fasta_plasmid/{plasmid}.fasta'
     output:
-        'mobsuite/{plasmid}.csv'
+        'data/mobsuite/{plasmid}.csv'
     threads: 4
     conda:
-        'bin/env/mobsuite.yml'
+        'data/bin/env/mobsuite.yml'
     shell:
         'mob_typer --infile {input} --out_file {output}'
 
 rule panaroo:
     input:
-        'prokka_gff/{gene}'
+        'data/prokka_gff/{gene}'
     output:
-        directory('panaroo/{gene}')
+        directory('data/panaroo/{gene}')
     threads: 8
     conda:
         'bin/env/panaroo.yml'
@@ -84,19 +84,18 @@ rule panaroo:
 
 rule metadata_touch:
     input:
-        expand('mobsuite/{plasmid}.tsv',plasmid=config['plasmids'])
+        expand('data/mobsuite/{plasmid}.tsv',plasmid=config['plasmids'])
     output:
-        temp('temp/metadata_touch.txt')
+        temp('data/temp/metadata_touch.txt')
     threads: 1
     shell:
         'touch {output}'
 
 rule metadata:
     input:
-        'temp/metadata_touch.txt'
+        'data/temp/metadata_touch.txt'
     output:
-        'plasmid_grouping/metadata.tsv'
-        ''
+        'data/plasmid_grouping/metadata.tsv'
     threads: 2
     script:
         'bin/scripts/metadata.py'
