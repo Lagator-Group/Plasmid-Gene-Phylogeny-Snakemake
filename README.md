@@ -18,4 +18,8 @@ Most of the files required are outputs of [Plasmid Assembler and TF Annotation p
 ### Config File
 Open `config.yml` and adjust the necessary parameters. 
 ### Running the pipeline
-`snakemake -c8 --use-conda --conda-frontend conda`
+`snakemake -c8 --use-conda --conda-frontend conda` Adjust `-c#` depending on available cores.
+
+Then make sure to check the alignments and trim as needed. Save the trimmed alignments in `data/muscle_trimmed` directory.
+
+`snakemake -s snakefile_iqtree -c8 --use-conda --conda-frontend conda`
